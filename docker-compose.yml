@@ -27,7 +27,7 @@ services:
       - ./data/local_pgdata:/var/lib/postgresql/data
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:latest
     container_name: pg_admin_${PROJECT_NAME}
     restart: unless-stopped
     ports:
