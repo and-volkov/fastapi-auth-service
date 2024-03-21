@@ -18,4 +18,4 @@ RUN touch README.md
 
 RUN poetry install --without dev && rm -rf $POETRY_CACHE_DIR
 COPY ./app /code/app
-COPY ./alembic.ini /code/alembic.ini
+COPY alembic.ini /code/alembic.ini
