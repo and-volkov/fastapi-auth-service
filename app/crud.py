@@ -1,10 +1,9 @@
 from fastapi import HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 import app.models as models
 import app.schemas as schemas
+from app.security import get_password_hash
 from app.settings import settings
 
 
@@ -41,7 +40,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
         username=user.username,
         email=user.email,
-        password=user.password,
+        password=get_password_hash(user.password),
     )
     db.add(db_user)
     db.commit()
