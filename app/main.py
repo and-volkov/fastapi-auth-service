@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 
 from .db import check_db_connection, get_db
+from .routers import auth as auth_router
 from .routers import users as users_router
 from .settings import settings
 
@@ -20,6 +21,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.include_router(
+    auth_router.router, prefix=settings.API_V1_STR, tags=["auth"]
+)
 app.include_router(
     users_router.router, prefix=settings.API_V1_STR, tags=["users"]
 )
