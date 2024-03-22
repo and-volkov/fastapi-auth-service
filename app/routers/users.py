@@ -1,4 +1,3 @@
-from typing import Union
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
@@ -27,7 +26,7 @@ async def create_user(
 ):
     try:
         return crud.create_user(db, user)
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=409, detail="User already exists")
 
 

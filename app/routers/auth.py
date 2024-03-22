@@ -1,14 +1,14 @@
 import logging
 from datetime import UTC, datetime, timedelta
-from typing import Annotated, Optional
+from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends, Form, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, Body, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app.crud import get_user
-from app.db import SessionLocal, get_db
+from app.db import get_db
 from app.schemas import Token, User
 from app.security import verify_password
 from app.settings import settings

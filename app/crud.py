@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 import app.models as models
 import app.schemas as schemas
 from app.security import get_password_hash
-from app.settings import settings
 
 
 def is_email(email: str):
