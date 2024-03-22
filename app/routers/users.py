@@ -8,6 +8,8 @@ import app.crud as crud
 import app.schemas as schemas
 from app.db import get_db
 
+from .auth import get_current_superuser
+
 router = APIRouter(
     responses={
         404: {"description": "User not found"},
@@ -39,7 +41,10 @@ async def read_user(email_or_username: str, db: Session = Depends(get_db)):
 
 
 @router.get("/users/", response_model=schemas.UserList)
-async def read_users(db: Session = Depends(get_db)):
+async def read_users(
+    db: Session = Depends(get_db),
+    _: schemas.User = Depends(get_current_superuser),
+):
     users = crud.get_users(db)
     return {"users": users}
 
