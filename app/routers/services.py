@@ -6,8 +6,15 @@ import app.crud as crud
 import app.schemas as schemas
 from app.db import get_db
 
-
 router = APIRouter()
+
+
+@router.get("/services/{service_id}", response_model=schemas.Service)
+async def read_service(service_id: int, db: Session = Depends(get_db)):
+    service = crud.get_service(db, service_id)
+    if service is None:
+        raise HTTPException(status_code=404, detail="Service not found")
+    return service
 
 
 @router.get("/services", response_model=schemas.ServiceList)
@@ -31,10 +38,10 @@ async def create_service(
 
 
 @router.delete(
-    "/services/{service_name}", status_code=status.HTTP_204_NO_CONTENT
+    "/services/{service_id}", status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_service(
-    service_name: str,
+    service_id: int,
     db: Session = Depends(get_db),
 ):
-    return crud.delete_service(db, service_name)
+    return crud.delete_service(db, service_id)
