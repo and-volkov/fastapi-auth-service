@@ -52,3 +52,73 @@ def delete_user(db: Session, email_or_username: str):
     db.delete(user)
     db.commit()
     return user
+
+
+def get_role(db: Session, role_name: str):
+    role = db.query(models.Role).filter(models.Role.name == role_name).first()
+    if not role:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Role not found",
+        )
+    return role
+
+
+def get_roles(db: Session):
+    return db.query(models.Role).all()
+
+
+def create_role(db: Session, role: schemas.RoleCreate):
+    db_role = models.Role(name=role.name)
+    try:
+        db.add(db_role)
+        db.commit()
+        db.refresh(db_role)
+        return db_role
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Role already exists")
+
+
+def delete_role(db: Session, role_name: str):
+    role = get_role(db, role_name)
+    db.delete(role)
+    db.commit()
+    return role
+
+
+def get_service(db: Session, service_name: str):
+    service = (
+        db.query(models.Service)
+        .filter(models.Service.name == service_name)
+        .first()
+    )
+    if not service:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Service not found",
+        )
+    return service
+
+
+def get_services(db: Session):
+    return db.query(models.Service).all()
+
+
+def create_service(db: Session, service: schemas.ServiceCreate):
+    db_service = models.Service(name=service.name)
+    try:
+        db.add(db_service)
+        db.commit()
+        db.refresh(db_service)
+        return db_service
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Service already exists")
+
+
+def delete_service(db: Session, service_name: str):
+    service = get_service(db, service_name)
+    db.delete(service)
+    db.commit()
+    return service
