@@ -4,6 +4,8 @@ from fastapi import Depends, FastAPI
 
 from .db import check_db_connection, get_db
 from .routers import auth as auth_router
+from .routers import roles as roles_router
+from .routers import services as services_router
 from .routers import users as users_router
 from .settings import settings
 
@@ -26,6 +28,16 @@ app.include_router(
 )
 app.include_router(
     users_router.router, prefix=settings.API_V1_STR, tags=["users"]
+)
+app.include_router(
+    roles_router.router,
+    prefix=settings.API_V1_STR,
+    tags=["roles"],
+)
+app.include_router(
+    services_router.router,
+    prefix=settings.API_V1_STR,
+    tags=["services"],
 )
 
 
