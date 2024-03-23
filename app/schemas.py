@@ -70,3 +70,51 @@ class UserListResponse(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class Service(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        orm_mode = True
+
+
+class ServiceCreate(BaseModel):
+    name: str
+
+
+class ServiceList(BaseModel):
+    services: List[Service]
+
+    class Config:
+        orm_mode = True
+
+
+class Role(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        orm_mode = True
+
+
+class RoleCreate(BaseModel):
+    name: str
+
+
+class RoleList(BaseModel):
+    roles: List[Role]
+
+    class Config:
+        orm_mode = True
+
+
+class UserRole(BaseModel):
+    id: int
+    user_id: int
+    role_id: int
+    service_id: int
+
+    class Config:
+        orm_mode = True
