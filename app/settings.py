@@ -42,7 +42,7 @@ class Settings(BaseSettings):
     ) -> PostgresDsn | str:
         if isinstance(v, str):
             return v
-        return PostgresDsn.build(
+        return PostgresDsn.build(  # type: ignore
             scheme="postgresql+asyncpg",
             username=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),
