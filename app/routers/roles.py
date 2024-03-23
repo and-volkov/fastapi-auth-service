@@ -6,12 +6,19 @@ import app.crud as crud
 import app.schemas as schemas
 from app.db import get_db
 
-
 router = APIRouter()
 
 
+@router.get("/roles/{role_id}", response_model=schemas.Role)
+async def read_role(role_id: int, db: Session = Depends(get_db)):
+    role = crud.get_role(db, role_id)
+    if role is None:
+        raise HTTPException(status_code=404, detail="Role not found")
+    return role
+
+
 @router.get("/roles", response_model=schemas.RoleList)
-def read_roles(db: Session = Depends(get_db)):
+async def read_roles(db: Session = Depends(get_db)):
     roles = crud.get_roles(db)
     return {"roles": roles}
 
@@ -19,7 +26,7 @@ def read_roles(db: Session = Depends(get_db)):
 @router.post(
     "/roles", response_model=schemas.Role, status_code=status.HTTP_201_CREATED
 )
-def create_role(
+async def create_role(
     role: schemas.RoleCreate = Depends(schemas.RoleCreate),
     db: Session = Depends(get_db),
 ):
@@ -30,5 +37,5 @@ def create_role(
 
 
 @router.delete("/roles/{role_name}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_role(role_name: str, db: Session = Depends(get_db)):
-    return crud.delete_role(db, role_name)
+async def delete_role(role_id: int, db: Session = Depends(get_db)):
+    return crud.delete_role(db, role_id)
