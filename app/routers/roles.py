@@ -27,7 +27,7 @@ def create_role(
     try:
         return crud.create_role(db, role)
     except Exception as e:
-        raise HTTPException(status_code=409, detail=str(e))
+        raise HTTPException(status_code=409, detail="Role already exists")
 
 
 @router.delete("/roles/{role_name}", status_code=status.HTTP_204_NO_CONTENT)

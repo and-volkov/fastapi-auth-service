@@ -28,7 +28,7 @@ async def create_service(
     try:
         return crud.create_service(db, service)
     except Exception as e:
-        raise HTTPException(status_code=409, detail=str(e))
+        raise HTTPException(status_code=409, detail="Service already exists")
 
 
 @router.delete(
