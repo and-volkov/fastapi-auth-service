@@ -75,7 +75,7 @@ def create_role(db: Session, role: schemas.RoleCreate):
         db.commit()
         db.refresh(db_role)
         return db_role
-    except Exception as e:
+    except Exception:
         db.rollback()
         raise HTTPException(status_code=409, detail="Role already exists")
 
@@ -112,7 +112,7 @@ def create_service(db: Session, service: schemas.ServiceCreate):
         db.commit()
         db.refresh(db_service)
         return db_service
-    except Exception as e:
+    except Exception:
         db.rollback()
         raise HTTPException(status_code=409, detail="Service already exists")
 
