@@ -1,9 +1,8 @@
-import logging
 from datetime import UTC, datetime, timedelta
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import (OAuth2PasswordBearer)
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
@@ -19,10 +18,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter()
 
 
-logger = logging.getLogger(__name__)
-
-
-class OAuth2ExtendedForm:
+class OAuth2CustomForm:
     def __init__(
         self,
         email_or_username: str = Body(
@@ -35,7 +31,6 @@ class OAuth2ExtendedForm:
 
 
 def authenticate_user(db, email_or_username: str, password: str):
-    logger.info(f"Email or username: {email_or_username}")
     user = get_user(db, email_or_username)
     if not user:
         return False
@@ -45,7 +40,6 @@ def authenticate_user(db, email_or_username: str, password: str):
 
 
 def create_access_token(data: dict):
-    logger.info(f"Data: {data}")
     to_encode = data.copy()
     expire = datetime.now(UTC) + timedelta(settings.JWT_TOKEN_LIFETIME_MINUTES)
     to_encode.update({"exp": expire})
@@ -57,14 +51,12 @@ def create_access_token(data: dict):
 
 @router.post("/token")
 async def login_for_access_token(
-    form_data: Annotated[OAuth2ExtendedForm, Depends()],
+    form_data: Annotated[OAuth2CustomForm, Depends()],
     db: Session = Depends(get_db),
 ) -> Token:
-    logger.info(f"Form data: {form_data}")
     user = authenticate_user(
         db, form_data.email_or_username, form_data.password
     )
-    logger.info(f"User: {user}")
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -83,7 +75,6 @@ async def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    logger.info(f"Token: {token}")
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
@@ -102,7 +93,6 @@ async def get_current_user(
 async def get_current_superuser(
     current_user: User = Depends(get_current_user),
 ):
-    logger.info(f"Current user: {current_user}")
     if current_user.is_superuser:
         return current_user
     raise HTTPException(
