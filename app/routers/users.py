@@ -1,3 +1,4 @@
+
 from fastapi import APIRouter, Depends, status
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
@@ -6,7 +7,9 @@ import app.crud as crud
 import app.schemas as schemas
 from app.db import get_db
 
-router = APIRouter()
+from .auth import get_current_superuser
+
+router = APIRouter(dependencies=[Depends(get_current_superuser)])
 
 
 @router.post(
@@ -25,7 +28,10 @@ async def create_user(
 
 
 @router.get("/users/{email_or_username}/", response_model=schemas.UserResponse)
-async def read_user(email_or_username: str, db: Session = Depends(get_db)):
+async def read_user(
+    email_or_username: str,
+    db: Session = Depends(get_db),
+):
     user = crud.get_user(db, email_or_username)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -49,8 +55,18 @@ async def read_user(email_or_username: str, db: Session = Depends(get_db)):
 @router.get("/users/", response_model=schemas.UserList)
 async def read_users(
     db: Session = Depends(get_db),
+    _: schemas.User = Depends(get_current_superuser),
 ):
     users = crud.get_users(db)
+    for user in users:
+        user_roles = crud.get_user_service_role(db, user.id)  # type: ignore
+        user.service_roles = [  # type: ignore
+            schemas.UserServiceRoleResponse(
+                service_id=role.service_id,  # type: ignore
+                role_id=role.role_id,  # type: ignore
+            )
+            for role in user_roles
+        ]
     return {"users": users}
 
 

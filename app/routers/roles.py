@@ -6,7 +6,9 @@ import app.crud as crud
 import app.schemas as schemas
 from app.db import get_db
 
-router = APIRouter()
+from .auth import get_current_superuser
+
+router = APIRouter(dependencies=[Depends(get_current_superuser)])
 
 
 @router.get("/roles/{role_id}", response_model=schemas.Role)
