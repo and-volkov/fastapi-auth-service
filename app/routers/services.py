@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, status
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 
@@ -6,7 +6,6 @@ import app.crud as crud
 import app.schemas as schemas
 from app.db import get_db
 
-from .auth import get_current_superuser
 
 router = APIRouter()
 
@@ -27,7 +26,7 @@ async def create_service(
 ):
     try:
         return crud.create_service(db, service)
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=409, detail="Service already exists")
 
 

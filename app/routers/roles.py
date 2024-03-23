@@ -6,7 +6,6 @@ import app.crud as crud
 import app.schemas as schemas
 from app.db import get_db
 
-from .auth import get_current_superuser
 
 router = APIRouter()
 
@@ -26,7 +25,7 @@ def create_role(
 ):
     try:
         return crud.create_role(db, role)
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=409, detail="Role already exists")
 
 
