@@ -1,5 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import DeclarativeBase, relationship
+from sqlalchemy.schema import UniqueConstraint
 
 
 class Base(DeclarativeBase):
@@ -47,3 +48,7 @@ class UserRole(Base):
     user = relationship("User", back_populates="roles")
     service = relationship("Service", back_populates="roles")
     role = relationship("Role", back_populates="users")
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "service_id", name="unique_user_service"),
+    )
