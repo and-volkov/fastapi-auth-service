@@ -1,4 +1,9 @@
+import logging
+
 from passlib.context import CryptContext
+
+# Suppress passlib warning (version conflict)
+logging.getLogger("passlib").setLevel(logging.ERROR)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
