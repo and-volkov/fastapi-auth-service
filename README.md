@@ -46,7 +46,7 @@ curl --location 'http://134.209.248.50:80/api/v1/users' \
 ```
 - Добавление роли пользователя
 ```bash
-curl --location 'http://134.209.248.50:80/api/v1/service_role?user_id=2&role_id=2&service_id=1' \
+curl -X POST --location 'http://134.209.248.50:80/api/v1/service_role?user_id=2&role_id=2&service_id=1' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbmRyZXkiLCJleHAiOjE4MzU2MTg0MTB9.ROrWHWsFh_1sCAG7b9srjA2XXG0H88U0ZgfpOAafCQE' \ 
 ```
