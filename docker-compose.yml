@@ -5,13 +5,11 @@ services:
     image: ${DOCKER_NAME}:${DOCKER_TAG}
     container_name: app_${PROJECT_NAME}
     restart: unless-stopped
-    ports:
-      - "80:80"
     volumes:
       - ./app:/code/app
     depends_on:
       - db
-    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 80
+    command: uvicorn app.main:app --reload --workers 4 --host 0.0.0.0 --port 8000
 
   db:
     image: postgres:${POSTGRES_VERSION}
@@ -37,6 +35,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
     volumes:
       - ./data/pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
 
 volumes:
   local_pgdata:

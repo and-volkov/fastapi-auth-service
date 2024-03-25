@@ -1,8 +1,8 @@
 from contextlib import asynccontextmanager
 
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 
-from .db import check_db_connection, get_db
+from .db import check_db_connection
 from .routers import auth as auth_router
 from .routers import roles as roles_router
 from .routers import services as services_router
@@ -39,9 +39,3 @@ app.include_router(
     prefix=settings.API_V1_STR,
     tags=["services"],
 )
-
-
-@app.get("/", dependencies=[Depends(get_db)])
-async def root():
-    check_db_connection()
-    return {"message": "Server is running"}
